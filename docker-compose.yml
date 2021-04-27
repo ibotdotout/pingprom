@@ -8,6 +8,13 @@ services:
     volumes:
       - ./prometheus:/pingprom/
 
+  jsonexporter:
+    image: quay.io/prometheuscommunity/json-exporter
+    command: ['--config.file=/config.ym']
+    ports: ['7979:7979']
+    volumes:
+      - ./json_exporter_config.yml:/config.ym
+
   blackbox:
     privileged: true
     image: prom/blackbox-exporter

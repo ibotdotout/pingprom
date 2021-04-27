@@ -18,6 +18,25 @@ scrape_configs:
           - target_label: __address__
             replacement: blackbox:9115
 
+    - job_name: json_exporter
+      static_configs:
+        - targets:
+          - jsonexporter:7979 ## Location of the json exporter's real <hostname>:<port>
+
+      ## gather the metrics from third party json sources, via the json exporter
+    - job_name: json
+      metrics_path: /probe
+      static_configs:
+        - targets:
+          - https://api.exchangerate.host/latest?base=THB&symbols=USD,SGD
+      relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
+        - target_label: __address__
+          replacement: jsonexporter:7979 ## Location of the json exporter's real <hostname>:<port>
+
 alerting:
     alertmanagers:
         - scheme: http

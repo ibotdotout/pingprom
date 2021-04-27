@@ -1,0 +1,9 @@
+---
+metrics:
+  - name: thb_to_sgd
+    help: Baht to Sigapore Dollar
+    path: "{ .rates.SGD }"
+
+  - name: thb_to_usd
+    help: Baht to US Dollar
+    path: "{ .rates.USD }"
