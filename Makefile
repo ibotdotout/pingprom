@@ -1,4 +1,5 @@
-SECRETS := $(shell readlink -f ./.env)
+SHELL := /bin/bash
+SECRETS := $(shell greadlink -f ./.env)
 
 all: alertmanager.yml prometheus/prometheus.yml
 	docker-compose up
@@ -8,7 +9,7 @@ alertmanager.yml: alertmanager.yml.in $(SECRETS)
 
 prometheus/prometheus.yml: prometheus/prometheus.yml.in
 	@test -f $(SECRETS) ; set -a ; source $(SECRETS) ; envsubst < $< > $@
-	docker run -v $(shell pwd)/prometheus:/pingprom:rw -it --entrypoint=promtool prom/prometheus check config /pingprom/prometheus.yml
+	docker run -v $(shell pwd)/prometheus:/pingprom:rw --entrypoint=promtool prom/prometheus check config /pingprom/prometheus.yml
 
 clean:
 	rm -rf alertmanager.yml prometheus/prometheus.yml
